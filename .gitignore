@@ -64,3 +64,13 @@ cypress/screenshots/
 playwright-report/
 test-results/
 **/.vitest-cache
+
+# ==========================================================================
+# 6. Terraform Artifacts
+# ==========================================================================
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+.terraform.lock.hcl

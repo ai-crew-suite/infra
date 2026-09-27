@@ -89,6 +89,8 @@
     "sonarqube",
     "SPOF",
     "stringifying",
+    "tfstate",
+    "tfvars",
     "tini",
     "unbuilt",
     "uncited",
