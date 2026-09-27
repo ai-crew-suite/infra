@@ -1,0 +1,72 @@
+# ====================================================================================
+# 🛡️ GENERAL BASELINE SYSTEM CONFIGURATION (ORGANIZATION CORE)
+# Frameworks: SOC 2 Type II Compliance | Global Platform Architecture
+# ====================================================================================
+
+app:
+  title: AI Crew Suite Platform
+  baseUrl: https://ai-crew-suite.dev
+
+organization:
+  name: AI Crew Suite
+
+backend:
+  # The unified internal entry point for backend inter-plugin communication APIs
+  baseUrl: https://ai-crew-suite.dev/api
+  listen:
+    port: 7007
+
+  # Core transport layer metadata definitions
+  cors:
+    origin: https://ai-crew-suite.dev
+    methods: [GET, POST, PUT, DELETE]
+    allowedHeaders: [Content-Type, Authorization]
+    credentials: true
+
+  # Baseline database layout block (Inherited and overwritten by local containers or IaC environments)
+  database:
+    client: pg
+    connection:
+      host: ${DB_HOST}
+      port: ${DB_PORT:-5432}
+      user: ${DB_USER}
+      password: ${DB_PASSWORD}
+      database: backstage_plugin_catalog
+
+# ====================================================================================
+# 📋 SYSTEM INTEGRATION LAYERS (CORE SCHEMAS)
+# ====================================================================================
+
+# 1. Integrations Control Plane: Baseline rules for securely authenticating with upstream providers
+integrations:
+  github:
+    - host: github.com
+      # Tokens are injected strictly via secure environment secrets at runtime
+      token: ${GITHUB_TOKEN}
+
+# 2. Software Catalog Engine Configuration
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+  rules:
+    - allow: [Component, System, Domain, API, Template, Location]
+
+# 3. Documentation Ingestion Engine Framework
+techdocs:
+  builder: 'local' # Default execution style, overwritten in production deployments by IaC cloud rules
+  generator:
+    runIn: 'docker'
+  publisher:
+    type: 'local'
+
+# 4. Scaffolder & Automated Template Engine
+scaffolder:
+  # Limits maximum background execution run tracks to prevent thread exhaustion
+  concurrentTasks: 5
+
+# 5. Third-Party Driver Gateway Schema Plugs (PagerDuty / Datadog Framework definitions)
+drivers:
+  pagerduty:
+    baseUrl: https://pagerduty.com
+  datadog:
+    baseUrl: https://datadoghq.com

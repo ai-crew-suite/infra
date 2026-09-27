@@ -1,0 +1,23 @@
+name: Changeset PRs
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run-release-pipeline:
+    name: Execute Release Automation
+    runs-on: ubuntu-latest
+    steps:
+      # Pattern: uses: {org}/{repo}/{folder}@{ref}
+      - name: 🛠️ Trigger Centralized Changeset Engine
+        uses: ai-crew-suite/actions/changeset@v1
+        with:
+          node-version: 22
+          pr-title: "Version Packages - Backstage Plugins Suite"
+          github-token: ${{ secrets.GITHUB_TOKEN }}

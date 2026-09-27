@@ -1,0 +1,20 @@
+name: Workspace Guardrails
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-monorepo-namespaces:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📂 Checkout Application Source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 🔍 Execute Centralized Architecture Audit
+        uses: ai-crew-suite/actions/lint-architecture@v1
