@@ -1,59 +1,76 @@
-# example-backend
+# `@ai-crew-suite/backend-legacy`
 
-This package is an EXAMPLE of a Backstage backend.
+🏛️ Traditional Express-based backend integration test bench and backward-compatibility playground for the AI Crew Suite platform.
 
-The main purpose of this package is to provide a test bed for Backstage plugins
-that have a backend part. Feel free to experiment locally or within your fork by
-adding dependencies and routes to this backend, to try things out.
+## Overview
 
-Our goal is to eventually amend the create-app flow of the CLI, such that a
-production ready version of a backend skeleton is made alongside the frontend
-app. Until then, feel free to experiment here!
+This workspace package provides an isolated, deterministic execution environment for the traditional, legacy Backstage backend architecture. It serves as our primary compatibility engine, ensuring that custom plugins, data transformers, and core agent orchestration interfaces function smoothly under traditional Express middleware loops, route builders, and legacy dependency patterns before being deployed to the platform.
 
-## Development
+## Core Responsibilities
 
-To run the example backend, first go to the project root and run
+- **Express Router Orchestration**: Manages the manual configuration, mounting, and execution of Express routers across core plugin environments.
+- **Backward-Compatibility Safeguards**: Mimics the traditional environment assembly tree to verify that custom drivers don't break for consumers relying on standard Backstage runtimes.
+- **Environment Service Injection**: Explicitly maps and injects foundational service singletons—such as Winston logging streams, `DatabaseManager` pools, and cache providers—directly down into separate route endpoints.
+
+## Architectural Dependency Tree
+
+This test bench bridges the gap between old-school runtime layouts and our modern monorepo configurations:
+
+- **Upstream Engine**: Built directly on top of the traditional `@backstage/backend-common` routing utilities and the CommonJS module resolution format.
+- **Downstream Consumers**: Used exclusively by internal validation pipelines and automated Playwright E2E tracks to execute backward-compatibility checks.
+- **Boundary Rule**: Always operate inside the legacy CommonJS parameters (`module: "CommonJS"`). Do not import modern, DI-only structural plugins (`createBackendModule`) into this workspace zone.
+
+## Local Development Workflow
+
+### Installation & Workspace Compilation
+
+Compile the legacy TypeScript source trees and output production definitions directly from the monorepo root:
 
 ```bash
-yarn install
+yarn install --refresh
+yarn build:legacy
 ```
 
-You should only need to do this once.
+### Running the Legacy Test Bench Server
 
-After that, go to the `packages/backend` directory and run
+To start the legacy server engine locally and watch for active file changes, execute:
 
 ```bash
-yarn start
+yarn start:legacy
 ```
 
-If you want to override any configuration locally, for example adding any secrets,
-you can do so in `app-config.local.yaml`.
+## Consumer Integration Checklist
 
-The backend starts up on port 7007 per default.
+To add an explicit sub-route or initialize a traditional core plugin inside this test bench, integrate the constructor loops under the plugin factory architecture:
 
-## Populating The Catalog
+### Mount Sub-Router Middleware
 
-If you want to use the catalog functionality, you need to add so called
-locations to the backend. These are places where the backend can find some
-entity descriptor data to consume and serve. For more information, see
-[Software Catalog Overview - Adding Components to the Catalog](https://backstage.io/docs/features/software-catalog/#adding-components-to-the-catalog).
+Create or append your service connector file under `src/plugins/` and wire it into the main execution lifecycle loops:
 
-To get started quickly, this template already includes some statically configured example locations
-in `app-config.yaml` under `catalog.locations`. You can remove and replace these locations as you
-like, and also override them for local development in `app-config.local.yaml`.
+```typescript
+// packages/backend-legacy/src/plugins/custom-driver.ts
+import { createRouter as createCustomRouter } from '@ai-crew-suite/drivers';
+import { Router } from 'express';
+import { PluginEnvironment } from '../types';
+  
+export async function createRouter(env: PluginEnvironment): Promise<Router> {
+  return await createCustomRouter({
+    logger: env.logger,
+    config: env.config,
+    database: env.database,
+  });
+}
+```
 
-## Authentication
+### Legacy Plugin Routing Matrix
 
-We chose [Passport](http://www.passportjs.org/) as authentication platform due
-to its comprehensive set of supported authentication
-[strategies](http://www.passportjs.org/packages/).
+Ensure all manual components conform to these core configuration boundaries:
 
-Read more about the
-[auth-backend](https://github.com/backstage/backstage/blob/master/plugins/auth-backend/README.md)
-and
-[how to add a new provider](https://github.com/backstage/backstage/blob/master/docs/auth/add-auth-provider.md)
+- **`src/index.ts`**: The central system bootloader. Orchestrates configuration reading, creates connection environments, and exposes `/api/*` endpoints.
+- **`src/types.ts`**: Captures and enforces structural type safety for `PluginEnvironment` singletons injected down to sub-routers.
+- **`src/plugins/`**: Isolated route mounting scripts dedicated to core modules (Catalog, Scaffolder, TechDocs, Proxy) and your integrated agent workflows.
 
-## Documentation
+## Compliance and Licensing
 
-- [Backstage Readme](https://github.com/backstage/backstage/blob/master/README.md)
-- [Backstage Documentation](https://backstage.io/docs)
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.

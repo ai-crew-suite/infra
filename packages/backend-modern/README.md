@@ -1,59 +1,76 @@
-# example-backend
+# `@ai-crew-suite/backend-modern`
 
-This package is an EXAMPLE of a Backstage backend.
+🚀 Modern dependency-injection backend integration test bench and validation engine for the AI Crew Suite platform.
 
-The main purpose of this package is to provide a test bed for Backstage plugins
-that have a backend part. Feel free to experiment locally or within your fork by
-adding dependencies and routes to this backend, to try things out.
+## Overview
 
-Our goal is to eventually amend the create-app flow of the CLI, such that a
-production ready version of a backend skeleton is made alongside the frontend
-app. Until then, feel free to experiment here!
+This workspace package provides an isolated execution profile for the new Backstage backend system. It serves as our primary verification layer for modern plugin architectures, leveraging declarative module assembly and type-safe dependency injection (DI). It ensures all platform features, workflow agents, and custom modules align perfectly with modern Backstage system constraints before hitting public cloud staging.
 
-## Development
+## Core Responsibilities
 
-To run the example backend, first go to the project root and run
+- **Declarative System Assembly**: Leverages `createBackend` to orchestrate runtime initialization automatically through modular extension frameworks.
+- **Modern Dependency Injection**: Utilizes type-safe container registration via extension points, removing traditional imperative wiring code.
+- **Compliance Sandboxing**: Houses custom governance policies—such as our blanket authorization bypass rules—to isolate and protect automated testing streams.
+
+## Architectural Dependency Tree
+
+This test bench represents the forward-facing runtime environment standard for our monorepo setups:
+
+- **Upstream Engine**: Fabricated on top of modern `@backstage/backend-defaults` paradigms and native Node ES Modules (`NodeNext`).
+- **Downstream Consumers**: Invoked directly by automated Playwright E2E suites to validate new system integrations and frontend component interactions.
+- **Boundary Rule**: Always write code using explicit modular boundaries. Custom rules must be registered via `createBackendModule`. Never mix legacy imperative setup files into this workspace folder.
+
+## Local Development Workflow
+
+### Installation & Workspace Compilation
+
+Transpile the modern server structure and compile production definitions directly from the monorepo root:
 
 ```bash
-yarn install
+yarn install --refresh
+yarn start:modern --build
 ```
 
-You should only need to do this once.
+### Running the Modern Test Bench Server
 
-After that, go to the `packages/backend` directory and run
+To boot up the new system server profile locally and evaluate file mutations on the fly, run:
 
 ```bash
-yarn start
+yarn start:modern
 ```
 
-If you want to override any configuration locally, for example adding any secrets,
-you can do so in `app-config.local.yaml`.
+## Consumer Integration Checklist
 
-The backend starts up on port 7007 per default.
+To introduce or test a modular plugin architecture within this test bench, inject the module directly into the backend initialization thread:
 
-## Populating The Catalog
+### Inject an Extension Module
 
-If you want to use the catalog functionality, you need to add so called
-locations to the backend. These are places where the backend can find some
-entity descriptor data to consume and serve. For more information, see
-[Software Catalog Overview - Adding Components to the Catalog](https://backstage.io/docs/features/software-catalog/#adding-components-to-the-catalog).
+Register your custom provider or tool module using native import strings:
 
-To get started quickly, this template already includes some statically configured example locations
-in `app-config.yaml` under `catalog.locations`. You can remove and replace these locations as you
-like, and also override them for local development in `app-config.local.yaml`.
+```typescript
+// packages/backend-modern/src/index.ts
+import { createBackend } from '@backstage/backend-defaults';
 
-## Authentication
+const backend = createBackend();
 
-We chose [Passport](http://www.passportjs.org/) as authentication platform due
-to its comprehensive set of supported authentication
-[strategies](http://www.passportjs.org/packages/).
+// Core features...
+backend.add(import('@backstage/plugin-catalog-backend/alpha'));
 
-Read more about the
-[auth-backend](https://github.com/backstage/backstage/blob/master/plugins/auth-backend/README.md)
-and
-[how to add a new provider](https://github.com/backstage/backstage/blob/master/docs/auth/add-auth-provider.md)
+// 🎯 Custom Extension Injection
+backend.add(import('@ai-crew-suite/drivers'));
 
-## Documentation
+backend.start();
+```
 
-- [Backstage Readme](https://github.com/backstage/backstage/blob/master/README.md)
-- [Backstage Documentation](https://backstage.io/docs)
+### Modern Server Configuration Matrix
+
+Verify that your workspace configurations match these mandatory execution boundaries:
+
+- **`src/index.ts`**: The main entry point. Initializes the core assembly container and mounts dependencies through fluent `.add()` tracks.
+- **`src/plugins/permission.ts`**: The custom security module override. Activates our safe authorization bypass to unlock local headless execution sweeps.
+- **`tsconfig.json`**: Explicitly locks in `experimentalDecorators` and `emitDecoratorMetadata` to sustain Backstage type-based DI engines.
+
+## Compliance and Licensing
+
+Copyright © 2026 The AI Crew Suite Authors.
+Licensed under the **Apache License, Version 2.0**.
