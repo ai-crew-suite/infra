@@ -1,4 +1,10 @@
-# `@ai-crew-suite/mock-service`
+# `@ai-crew-suite/wiremock-network-interceptor`
+
+```bash
+│
+└── mock-interceptor/    # 🧪 CODE-LEVEL PROCESS TRAPPING: The MSW browser/node engine
+    └── src/drivers.ts   # Configured to import matching datasets straight from ../mock-fixtures/
+```
 
 🔌 In-memory code-level network traffic interception engine and Mock Service Worker (MSW) drivers for the AI Crew Suite platform.
 

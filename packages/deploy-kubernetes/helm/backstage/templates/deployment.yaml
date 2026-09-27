@@ -25,6 +25,18 @@ spec:
               protocol: TCP
 
           # Injected runtime production configs
+          env:
+            - name: APP_BASE_URL
+              value: {{ .Values.backstage.config.baseUrl | quote }}
+            - name: DB_HOST
+              value: {{ .Values.backstage.config.dbHost | quote }}
+            - name: DB_PORT
+              value: {{ .Values.backstage.config.dbPort | quote }}
+            - name: MOCK_PROXY_URL
+              value: {{ .Values.backstage.config.mockProxyUrl | quote }}
+            - name: MOCK_FIXTURES_PATH
+              value: {{ .Values.backstage.config.mockDataPath | quote }}
+
           envFrom:
             - secretRef:
                 name: {{ .Values.backstage.envFromSecret }}

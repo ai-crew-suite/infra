@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 import { createBackend } from '@backstage/backend-defaults';
+import { catalogProcessingExtensionPoint } from '@backstage/plugin-catalog-node/alpha'
+import { EnterpriseCustomKindsProcessor } from '@ai-crew-suite/custom-catalog-kinds';
 
-// 1. Initialize the core Dependency Injection assembly container 
+// 1. Initialize the core Dependency Injection assembly container
 const backend = createBackend();
 
 // 2. Attach modern core system plugins and alpha boundary routers
@@ -36,7 +38,9 @@ backend.add(import('./plugins/permission'));
 // 4. (Optional Placeholder): Register your local platform or tool mock engines here.
 // When your 'drivers' or 'platform' repositories push update bundles via submodules,
 // you hook them into this test architecture simply by importing them directly:
-// backend.add(import('@ai-crew-suite/drivers')); 
+// backend.add(import('@ai-crew-suite/drivers'));
+
+catalogProcessingExtensionPoint.addProcessor(new EnterpriseCustomKindsProcessor());
 
 // 5. Fire the runtime network execution loop
 backend.start();

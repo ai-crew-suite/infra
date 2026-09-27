@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/backend-modern" },
+    { "path": "./packages/backend-legacy" },
+    { "path": "./packages/custom-catalog-kinds" },
+    { "path": "./packages/wiremock-network-interceptor" }
+  ]
+}

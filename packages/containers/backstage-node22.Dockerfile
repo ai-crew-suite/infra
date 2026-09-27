@@ -1,6 +1,5 @@
 # ====================================================================================
-# 🛡️ PLATFORM DEPLOYMENT ENGINE (MULTI-STAGE ENVIRONMENT ISO)
-# Frameworks: SOC 2 Type II Compliance | Minimal Attack Surface Hardening
+#   Monolithic, production-ready environment orchestrator
 # ====================================================================================
 
 # --- STAGE 1: SYSTEM PREPARATION & CORREPACK ISOLATION ---
@@ -43,7 +42,7 @@ COPY turbo.json ./
 RUN yarn compile
 
 # --- STAGE 3: THE HIGH-SECURITY LEAN RUNTIME ---
-FROM node:22-bookworm-slim AS runtime
+FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
 
 # Enforce secure system defaults (never execute container tracking hooks as root user)
@@ -52,7 +51,7 @@ USER node
 # Copy execution environments, runtime assets, and static mock fixtures cleanly
 COPY --chown=node:node --from=build /app/package.json /app/yarn.lock /app/.yarnrc.yml ./
 COPY --chown=node:node --from=build /app/.yarn/ .yarn/
-COPY --chown=node:node --from=build /app/packages/app-config/app-config.yaml ./app-config.yaml
+COPY --chown=node:node --from=build /app/packages/app-config/app-config.ci.yaml ./app-config.yaml
 COPY --chown=node:node --from=build /app/packages/backend-modern/dist/ packages/backend-modern/dist/
 COPY --chown=node:node --from=build /app/packages/backend-modern/package.json packages/backend-modern/package.json
 COPY --chown=node:node --from=build /app/node_modules/ node_modules/

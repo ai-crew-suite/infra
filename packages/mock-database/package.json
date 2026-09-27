@@ -1,8 +1,8 @@
 {
-  "name": "@ai-crew-suite/mock-data",
+  "name": "@ai-crew-suite/mock-fixturesbase",
   "version": "1.0.0",
   "private": true,
-  "description": "Centralized, high-fidelity static ecosystem data fixtures for the AI Crew Suite platform.",
+  "description": "",
   "scripts": {
     "lint": "prettier --check \"**/*.{yaml,yml,html,json}\"",
     "lint:fix": "prettier --write \"**/*.{yaml,yml,html,json}\""

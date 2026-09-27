@@ -12,4 +12,20 @@
       "Content-Type": "application/json"
     }
   }
+},
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/v1/incidents",
+    "queryParameters": {
+      "service_ids[]": {
+        "equalTo": "SRV-AGENTS"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "vendor/pagerduty-agents-incidents.json",
+    "headers": { "Content-Type": "application/json" }
+  }
 }

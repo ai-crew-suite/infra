@@ -1,4 +1,4 @@
-# `@ai-crew-suite/mock-data`
+# `@ai-crew-suite/mock-fixtures`
 
 💾 High-fidelity static data fixtures, catalog entities, and pre-compiled TechDocs documentation layers for the AI Crew Suite platform.
 
@@ -26,7 +26,6 @@ Workspace Installation & Code Consistency
 
 This package follows our strict repository requirement for absolute folder consistency, allowing it to register natively as an official Node workspace. To link its local Prettier formatting engine dependencies, execute from the repository root:
 
-
 ```bash
 yarn install
 ```
@@ -36,7 +35,7 @@ yarn install
 To check that your data documents, catalog entities, and raw HTML runbook fragments strictly pass standard syntax formatting guidelines, run the workspace linter task:
 
 ```bash
-yarn workspace @ai-crew-suite/mock-data run lint
+yarn workspace @ai-crew-suite/mock-fixtures run lint
 ```
 
 ### Automated Code Style Fixing
@@ -44,19 +43,19 @@ yarn workspace @ai-crew-suite/mock-data run lint
 To automatically fix formatting errors, trailing spaces, or indentation variations inside your mock assets instantly, run:
 
 ```bash
-yarn workspace @ai-crew-suite/mock-data run lint:fix
+yarn workspace @ai-crew-suite/mock-fixtures run lint:fix
 ```
 
 ## Consumer Data Checklist
 
 To extend the catalog or trace custom visual components inside your test bench suites, integrate your files using standard Backstage schema patterns:
 
-### Register a Mock Software Entity
+### Register Mock Catalog Entities
 
 Append your target component block directly into the catalog file to instantly generate new software architecture nodes inside the portal UI:
 
 ```yaml
-# packages/mock-data/catalog-fixtures.yaml
+# packages/mock-fixtures/catalog/catalog-fixtures.yaml
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -68,6 +67,43 @@ spec:
   owner: platform-team
   system: crew-suite
 ```
+
+### Register Pre-Compiled TechDocs Mocks
+
+To achieve high-speed, zero-dependency execution loops inside air-gapped staging networks and local developer workspaces, this package isolates pre-compiled HTML fragments and static search indexes under `techdocs/`.
+
+#### Mandatory File System Path Mapping
+
+Backstage exposes strict directory conventions for local asset publishers. Every file must align completely with the entity's catalog identifier keys using this structural layout template:
+
+```text
+techdocs/
+└── [namespace]/               # Catalog metadata namespace isolation boundary (e.g., 'default')
+    └── [kind]/                # Catalog descriptor type class (lowercase, e.g., 'component')
+        └── [name]/            # The absolute metadata.name key of the service (e.g., 'platform')
+            ├── index.html     # Primary landing layout container
+            ├── search/
+            │   └── search_index.json # Lunr.js client-side localized keyword search map
+            └── operations/
+                └── index.html # Deep runtime execution runbooks (Sub-pages)
+```
+
+#### Operational Sub-File Mechanics
+
+##### 1. Static Asset Rendering Pages (`index.html`)
+
+These files contain raw HTML semantic elements formatted to render technical assets immediately. The paths within the documents use relative HTML link tags (`href="operations/index.html"`). This ensures cross-page navigation remains completely self-contained within the localized directory bubble—bypassing external routing systems.
+
+##### 2. Lunr.js In-Memory Search Engine Map (`search/search_index.json`)
+
+To avoid running expensive external database clusters for full-text search during tests, this schema provides a pre-compiled dataset for client-side evaluation.
+
+- **`config`**: Configures language filters and text tokenizers (`trimmer`, `stemmer`).
+- **`docs`**: A dense lookup table mapping every `title` and raw code `text` directly back to its relative file `location` sub-path, preventing browser lookup failures.
+
+#### Data Maintenance Operations
+
+When modifying these documentation assets, ensure that any text added to the HTML runbook pages is manually synchronized inside the `docs.text` array parameters of the `search_index.json` blueprint. This preserves search indexing precision for automated end-to-end verification suites.
 
 ## Static Data Component Matrix
 

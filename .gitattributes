@@ -12,4 +12,4 @@
 # Hide compiled code and large static documentation fixture trees from standard diff noise
 actions/**/dist/*.js -diff linguist-generated=true
 **/dist/*.js linguist-generated=true
-packages/mock-data/techdocs/** linguist-generated=true
+packages/mock-fixtures/techdocs/** linguist-generated=true

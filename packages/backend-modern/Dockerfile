@@ -1,4 +1,4 @@
-# This dockerfile builds an image for the backend package.
+# This dockerfile builds an image for the backend package for isolated, zero-dependency unit checks.
 # It should be executed with the root of the repo as docker context.
 #
 # Before building this image, be sure to have run the following commands in the repo root:

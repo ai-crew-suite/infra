@@ -45,7 +45,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./mock-control-plane:/home/wiremock:ro # Read-only mount for compliance stability
+      # 1. Mounts the routing rules folder
+      - ./../mock-network/mappings:/home/wiremock/mappings:ro
+      # 2. Mounts the unified data package straight into WireMock's asset roots
+      - ./../mock-fixtures:/home/wiremock/__files:ro
     command:
       # Enables background scanning so adding new .json mapping files doesn't require a restart
       --global-response-templating

@@ -12,6 +12,18 @@ This workspace package contains the structural **Helm Charts** and deployment ma
 - **Self-Healing Topologies**: Declares deep liveness and readiness probe metrics to ensure automated rollouts safely discard stalling containers without introducing service interruptions.
 - **Secret Perimeter Security**: Avoids unencrypted variable definitions, instead exposing declarative hook arrays that consume credential keys dynamically via secure cloud environment injection points.
 
+## Difference Between `backstage` and `platform` Helm Charts
+
+These two Helm configurations separate user-facing interfaces from heavy backend execution tasks:
+
+| Attribute             | Backstage Chart (`.../helm/backstage/templates/deployment.yaml`) | Platform Chart (`.../helm/platform/templates/deployment.yaml`) |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Primary Process**   | **Node.js Web & API Gateway Server**                         | **Temporal Agentic Workflow Worker Nodes**                   |
+| **Primary Role**      | Runs the Backstage container image to compile dashboards and route user REST API interactions. | Runs **core automation logic** (the custom background python/node worker threads). |
+| **Network Presence**  | **Public/External Facing**. Requires an Ingress network rule and Load Balancer port routing to expose the UI. | **Internal/Private Only**. Has no ports exposed to the web. It communicates entirely via outbound worker polls to Temporal. |
+| **Network Variables** | Requires `APP_BASE_URL` to route cross-origin browser queries correctly. | Does **not** use `APP_BASE_URL`. It ignores web addresses because it handles asynchronous processing. |
+| **Scaling Profiles**  | Scaled horizontally based on browser query loads and request traffic volume. | Scaled horizontally based on background queue depth and heavy orchestration tasks. |
+
 ## Architectural Dependency Tree
 
 This deployment engine functions as our primary packaging layer for production cloud environments:
@@ -71,4 +83,3 @@ Verify that your deployment parameters align with these mandatory architectural 
 
 Copyright © 2026 The AI Crew Suite Authors.
 Licensed under the **Apache License, Version 2.0**.
-

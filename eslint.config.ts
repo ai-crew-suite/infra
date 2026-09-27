@@ -35,7 +35,7 @@ export default tseslint.config(
       "**/dist-types/**",
       "**/node_modules/**",
       "**/.turbo/**",
-      "packages/mock-data/techdocs/**"
+      "packages/mock-fixtures/techdocs/**"
     ]
   }
 );

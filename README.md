@@ -1,4 +1,6 @@
-# AI Crew Suite — Infrastructure Control Plane (`infra`)
+# AI Crew Suite — Workbench (`workbench`)
+
+![AI Crew Suite Workbench splash image](./ai-crew-suite-social-share-workbench.jpeg)
 
 Centralized Infrastructure-as-Code (IaC), deployment charts, deterministic local development runtimes, and regulatory-compliant mock ecosystems for the AI Crew Suite platform.
 
@@ -21,74 +23,41 @@ ai-crew-suite/infra/
 │   ├── containers/                      # Local Docker Compose network (Postgres + pgvector, Redis, WireMock)
 │   ├── deploy-kubernetes/               # High-availability production Helm charts (Backstage + Workers)
 │   ├── deploy-terraform/                # Managed AWS Cloud Topologies (VPC, ECR, RDS, ElastiCache)
-│   ├── mock-data/                       # Static Backstage catalog entities & pre-compiled TechDocs assets
+│   ├── mock-fixtures/                       # Static Backstage catalog entities & pre-compiled TechDocs assets
 │   └── mock-service/                    # In-memory browser network traffic interceptor (MSW)
 ```
 
 ## 🚀 Local Development Quickstart
 
 ### 1. Initialize the Monorepo Workspace
+
 Ensure you have [Yarn 4+](https://yarnpkg.com) installed. Link the workspace packages and download required development tools:
+
 ```bash
 yarn install
 ```
 
 ### 2. Stand Up the Local Container Network
+
 Spin up the offline data layer, configure the `pgvector` schemas, and launch the third-party proxy interceptors:
+
 ```bash
 yarn infra:up
 ```
+
 *This command starts PostgreSQL on host port `5433` (to prevent conflicts with native workstation databases), maps your long-term agent memory tables (Mem0), and starts WireMock on port `8080`.*
 
 ### 3. Run the Backend Test Benches
+
 Verify code compilation, type safety, and configuration routing across both system variants simultaneously:
+
 ```bash
 yarn compile           # Compiles all TypeScript packages via Turborepo
 yarn start:modern      # Launches the Modern DI Backstage testing instance
 yarn start:legacy      # Launches the Traditional Express Backstage testing instance
 ```
 
----
-
-## 📡 Cross-Repository Syndication (Git Submodule Ingestion)
-
-To give other application repositories (`agents`, `platform`, `drivers`) immediate access to these local running utilities, mount this infrastructure repository as an tracking submodule inside your application root directories:
-
-```bash
-# Execute this inside your application codebeds to mount the runner utilities:
-git submodule add -b main https://github.com internal/infra
-```
-
-Once mounted, write a standardized, cross-platform shortcut script inside the application repo's `package.json` to allow developers to spin up the container network seamlessly from their local environments:
-
-```json
-{
-  "name": "@ai-crew-suite/agents",
-  "scripts": {
-    "infra:up": "yarn --cwd internal/infra infra:up",
-    "infra:down": "yarn --cwd internal/infra infra:down",
-    "infra:logs": "yarn --cwd internal/infra infra:logs"
-  }
-}
-```
-
-## 🔌 Advanced Usage: Yarn Catalog Plugin Injection
-
-Both the legacy and modern servers consume configurations layered natively from `packages/app-config/`. This allows you to pull compiled workspace tool modules and core system loops from other repositories and mount them directly into your testing servers:
-
-```typescript
-import { createBackend } from '@backstage/backend-defaults';
-import { catalogModuleCreatePod } from '@ai-crew-suite/platform'; // Your core workflow system
-import { pagerDutyDriverModule } from '@ai-crew-suite/drivers';   // Your integrated driver tools
-
-const backend = createBackend();
-
-// Inject modules smoothly using native dependency injection
-backend.add(catalogModuleCreatePod());
-backend.add(pagerDutyDriverModule());
-
-backend.start();
-```
+## 📡 Consuming the Dev / Test Server in Other Repos
 
 ## 🛡️ Verification & Compliance Standards
 
@@ -100,6 +69,67 @@ yarn tf:validate  # Verifies HashiCorp infrastructure layouts are syntactically 
 yarn helm:lint    # Audits Kubernetes Helm charts against production schema configurations
 yarn image:build  # Compiles a hardened, multi-stage production Docker image securely
 ```
+
+## Coordination with GitHub Self-Hosted CI Runners
+
+To execute high-fidelity Playwright end-to-end (E2E) automation suites securely, this repository avoids using public GitHub-hosted compute clusters. Instead, our deployment charts and Infrastructure-as-Code modules are orchestrated dynamically inside an **Ephemerally Orchestrated Infrastructure Loop** powered by internal self-hosted runners.
+
+```text
+[GitHub Actions Runner]
+       │
+       ▼ (Runs `terraform apply` & `helm install`)
+┌────────────────────────────────────────────────────────┐
+│             AWS VPC Secure Target Perimeter            │
+│                                                        │
+│  ┌───────────────────────┐    ┌─────────────────────┐  │
+│  │  EKS Kubernetes Pods  │───>│ AWS RDS PostgreSQL  │  │
+│  │  (Your Test Server)   │    │ (Vector Seeds)      │  │
+│  └───────────────────────┘    └─────────────────────┘  │
+│              ▲                                         │
+└──────────────┼─────────────────────────────────────────┘
+               │ (Executes headless tests safely inside the VPC)
+[Self-Hosted EKS Runner Pod]
+```
+
+### 🔐 Mandatory CI Pipeline Environment Matrix
+
+To prevent compilation crashes and ensure absolute cryptographic supply-chain security inside the isolated AWS network perimeter, the automated **GitHub Actions Preview Pipeline** expects the following explicit secret tokens and variable injections:
+
+#### 1. Security & Authentication Secrets (`secrets.*`)
+
+- `AWS_ACCOUNT_ID`: The unique 12-digit AWS registry owner identifier used to cleanly target your private Elastic Container Registry (ECR) endpoints.
+- `AWS_ACCESS_KEY_ID`: The operational access credential token allowing the public GitHub-hosted runner (`ubuntu-latest`) to validate its identity during initial infrastructure steps.
+- `AWS_SECRET_ACCESS_KEY`: The cryptographically masked access key used to authorize secure resource provisioning sweeps.
+- `AWS_PROD_DB_HOST`: The secure endpoint address of your AWS RDS PostgreSQL cluster, mapped straight to the cluster's internal storage layer.
+- `AWS_PROD_DB_PASSWORD`: The high-security password injected straight into the `TF_VAR_database_secure_password` block to seed your relational PostgreSQL nodes non-interactively.
+
+#### 2. Dynamic Runtime Environment Variables (`env.*`)
+
+- `APP_BASE_URL`: Generated on the fly matching the format `https://preview-pr-${{ github.event.number }}.ai-crew-suite.dev`. This is passed straight into the multi-stage Backstage Node container process via Helm parameters to securely bind cross-origin (CORS) rules and API gateway routes.
+- `AWS_DEFAULT_REGION`: Explicitly locked to `us-east-1` to govern standard geographical location targeting across all cluster load balancers.
+- `DB_PORT`: Automatically shifts from the local developer conflict-bypass port (`5433`) back to the standard database port (`5432`) inside the cloud testing namespace.
+- `MOCK_PROXY_URL`: Formatted dynamically as `http://wiremock-service.platform-preview-pr-${{ github.event.number }}.svc.cluster.local:8080`. This maps the internal Kubernetes DNS name of the WireMock pod to intercept Datadog and PagerDuty calls at the namespace boundary.
+- `MOCK_FIXTURES_PATH`: Injected as `./mock-fixtures` to account for the flattened file directory tree inside the final production container (`WORKDIR /app`).
+
+### Ephemeral Staging Lifecycle Mechanics
+
+1. **The Trigger**: Opening or updating a Pull Request checks your internal changesets and automatically cancels any outdated, in-flight builds via explicit workflow concurrency parameters.
+2. **The Compilation Step**: The pipeline triggers a direct filesystem read of your modular packages, executing a quiet `yarn install --immutable` check. It builds a hardened multi-stage release image (`ai-crew-suite/backstage:latest`) and pushes it to ECR, tagged with the matching PR tracking number (`pr-42`).
+3. **The Isolated Rollout**: Helm provisions a brand-new, isolated Kubernetes namespace (`platform-preview-pr-42`). It splits deployment pods elegantly into public-facing **Backstage Web Nodes** on port `7007` and private, high-throughput **Temporal Agent Workers**.
+4. **The Verification Sweep**: Headless Playwright integration browsers launch straight from the self-hosted runner pod inside the secure VPC boundary—running tests against the preview endpoint with massive network speed and total database isolation.
+
+### The Operational Lifecycle Track
+
+1. **The Handshake Trigger**: A pull request is opened. The GitHub Actions orchestrator assigns the job to a **self-hosted runner daemon running directly inside your AWS EKS cluster** (using tools like *Actions Runner Controller (ARC)*) or an auto-scaled EC2 compute instance.
+2. **Infrastructure Provisioning**: Because the runner resides *inside* your AWS network boundary, it securely invokes your **Terraform and Helm blueprints** to provision a brand-new, isolated namespace or container environment specifically for that specific Pull Request.
+3. **Test Execution**: Playwright launches headlessly on the self-hosted runner. It runs its browser sweeps directly against the newly spawned Kubernetes test pod inside the safe VPC zone—guaranteeing rapid network throughput and data isolation.
+4. **Tear Down**: Once the test suite concludes (pass or fail), the runner triggers a cleanup track (`helm uninstall` / `terraform destroy`) to wipe the environment, maintaining **SOC 2 cost and resource hygiene**.
+
+### How Automated AWS Preview URL Flow Works
+
+1. When your GitHub Actions runner executes `helm install`, it passes a dynamic identifier (like the PR number: `pr-42`) into the Helm values.
+2. Your Ingress manifest detects this and creates an AWS Application Load Balancer with a dynamic rule.
+3. **ExternalDNS** intercepts this rule, hooks into AWS Route 53, and automatically registers a transient record: `https://preview-pr-42.ai-crew-suite.dev`.
 
 ## ⚖️ Compliance and Licensing
 

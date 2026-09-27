@@ -9,7 +9,7 @@ This workspace package serves as the single source of truth for all runtime prop
 ## Core Responsibilities
 
 * **Topology Consolidation**: Establishes immutable infrastructure connection endpoints, route namespaces, and security contexts across platform segments.
-* **Environment Layering**: Manages the strict division between fallback baseline controls (`app-config.yaml`) and localized isolated testing overrides (`app-config.local.yaml`).
+* **Environment Layering**: Manages the strict division between fallback baseline controls (`app-config.ci.yaml`) and localized isolated testing overrides (`app-config.local.yaml`).
 * **Supply Chain Sanitization**: Encapsulates external connection schemas using standard environment variable syntax maps (`${DB_HOST}`, `${GITHUB_TOKEN}`), ensuring no secrets or unencrypted credentials leak into source control.
 
 ## Architectural Dependency Tree
@@ -47,7 +47,7 @@ To apply these parameters cleanly to a server instance workspace, layer the conf
 ```json
 // package.json script snippet configuration
 "scripts": {
-  "start": "backstage-cli package start --config ../app-config/app-config.yaml --config ../app-config/app-config.local.yaml"
+  "start": "backstage-cli package start --config ../app-config/app-config.ci.yaml --config ../app-config/app-config.local.yaml"
 }
 ```
 
@@ -55,7 +55,7 @@ To apply these parameters cleanly to a server instance workspace, layer the conf
 
 Ensure your configuration architecture properties conform to these distinct boundaries:
 
-* [ ] **`app-config.yaml`**: Non-sensitive baseline blueprints common across all deployments. Uses template hooks to pull parameters from environment variables at runtime.
+* [ ] **`app-config.ci.yaml`**: Non-sensitive baseline blueprints common across all deployments. Uses template hooks to pull parameters from environment variables at runtime.
 * [ ] **`app-config.local.yaml`**: Local workstation development overrides. Routes traffic to your local `pgvector` container pool, shifts driver APIs to WireMock (`http://localhost:8080`), and forces TechDocs to render from local disk assets.
 
 ## Compliance and Licensing

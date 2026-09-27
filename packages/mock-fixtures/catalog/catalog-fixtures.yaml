@@ -12,6 +12,7 @@ spec:
   owner: platform-team
 
 ---
+
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
@@ -22,6 +23,7 @@ spec:
   domain: agentic-capabilities
 
 ---
+
 # 🤖 1. CORE ORCHESTRATION ENGINE COMPONENT
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -32,6 +34,12 @@ metadata:
     # Forces Backstage to parse local pre-compiled HTML documentation instead of querying the cloud
     backstage.io/techdocs-ref: dir:.
     temporal.io/namespace: ai-crew-suite-prod
+    # 🎯 THE PAGERDUTY CORRELATION BINDING:
+    # Tells the plugin exactly what integration service key to filter by when querying incidents
+    ://pagerduty.com: SRV-PLATFORM
+    # 🎯 THE DATADOG CORRELATION BINDING:
+    # Instructs the telemetry plugin exactly which dashboard matrix block to query and render
+    ://datadoghq.com: https://datadoghq.com
 spec:
   type: service
   lifecycle: production
@@ -41,6 +49,7 @@ spec:
     - platform-workflow-api
 
 ---
+
 # 🔌 2. INTEGRATION DRIVERS COMPONENT
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -58,6 +67,7 @@ spec:
     - component:platform
 
 ---
+
 # 💻 3. USER-FACING FRONTEND/BACKEND APPLICATION
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -76,6 +86,7 @@ spec:
     - component:drivers
 
 ---
+
 # 📡 4. SYSTEM BOUNDARY AUTOMATED INGESTION ENDPOINT
 apiVersion: backstage.io/v1alpha1
 kind: Location

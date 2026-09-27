@@ -2,7 +2,7 @@
   "name": "@ai-crew-suite/infra-root",
   "private": true,
   "version": "1.0.0",
-  "packageManager": "yarn@4.18.0",
+  "packageManager": "yarn@4.18.1",
   "engines": {
     "node": "22 || 24",
     "yarn": ">=4.0.0"
@@ -11,8 +11,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build:legacy": "turbo run build --filter=@ai-crew-suite/backend-legacy",
-    "build:modern": "turbo run build --filter=@ai-crew-suite/backend-modern",
+    "build": "turbo run build",
     "clean": "turbo run clean",
     "compile": "turbo run build",
     "helm:lint": "turbo run helm:lint --filter=@ai-crew-suite/deploy-kubernetes",

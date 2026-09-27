@@ -63,6 +63,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@ai-crew-suite/custom-catalog-kinds@workspace:packages/custom-catalog-kinds":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/custom-catalog-kinds@workspace:packages/custom-catalog-kinds"
+  dependencies:
+    typescript: "catalog:dev"
+  languageName: unknown
+  linkType: soft
+
 "@ai-crew-suite/deploy-kubernetes@workspace:packages/deploy-kubernetes":
   version: 0.0.0-use.local
   resolution: "@ai-crew-suite/deploy-kubernetes@workspace:packages/deploy-kubernetes"
@@ -83,17 +91,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/mock-data@workspace:packages/mock-data":
+"@ai-crew-suite/mock-fixtures@workspace:packages/mock-fixtures":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/mock-data@workspace:packages/mock-data"
+  resolution: "@ai-crew-suite/mock-fixtures@workspace:packages/mock-fixtures"
   dependencies:
     prettier: "catalog:dev"
   languageName: unknown
   linkType: soft
 
-"@ai-crew-suite/mock-service@workspace:packages/mock-service":
+"@ai-crew-suite/mock-fixturesbase@workspace:packages/mock-fixturesbase":
   version: 0.0.0-use.local
-  resolution: "@ai-crew-suite/mock-service@workspace:packages/mock-service"
+  resolution: "@ai-crew-suite/mock-fixturesbase@workspace:packages/mock-fixturesbase"
+  dependencies:
+    prettier: "catalog:dev"
+  languageName: unknown
+  linkType: soft
+
+"@ai-crew-suite/mock-network@workspace:packages/mock-network":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/mock-network@workspace:packages/mock-network"
+  dependencies:
+    prettier: "catalog:dev"
+  languageName: unknown
+  linkType: soft
+
+"@ai-crew-suite/mock-service@workspace:packages/wiremock-network-interceptor":
+  version: 0.0.0-use.local
+  resolution: "@ai-crew-suite/mock-service@workspace:packages/wiremock-network-interceptor"
   dependencies:
     msw: "catalog:prod"
     typescript: "catalog:dev"
